@@ -39,7 +39,7 @@ Fonts: Barlow Condensed, DM Sans, and Caveat, downloaded from Google Fonts. Font
 
 The case study section also contains all four mini case studies from PDF page 12: Hilarius Ayurveda, Bosom Buddy, IPCS Global, and +Vibes. Eight original creative previews link to their Drive source files; Bosom Buddy previews are actual label files, and +Vibes previews show branded products. A keyboard-accessible evidence viewer supports grouped previous/next navigation, Escape to close, focus return, and source links. Campaign screenshots and portfolio summaries are labeled separately. Qualitative mini case outcomes are attributed to the portfolio; artwork is not presented as proof of numerical performance. Source mappings and review notes are in `assets/proof/sources.json`.
 
-No website has been published by this local build.
+Published on Cloudflare Pages: https://prashant-portfolio-9rn.pages.dev
 
 
 ## Interface behavior
