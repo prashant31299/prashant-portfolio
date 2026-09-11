@@ -45,6 +45,8 @@ The homepage includes an illustrated portrait based on Prashant’s supplied pho
 
 Cloudflare Pages uses direct uploads. GitHub pushes alone do not deploy the site. To publish an update, run `npm run build`, then `npx wrangler@3 pages deploy dist --project-name prashant-portfolio --branch main` while authenticated to the owning Cloudflare account.
 
+Scroll-linked parallax gently zooms the homepage portrait (up to 14%) and project photos (up to 6%), with the portrait label moving independently for depth. Native scrolling is preserved; transforms update once per animation frame for visible images. Pause freezes the scroll effect, and reduced-motion preferences restore the static layout.
+
 
 ## Interface behavior
 

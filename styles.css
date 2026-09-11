@@ -762,6 +762,8 @@ a, button, summary { touch-action: manipulation; }
 @keyframes portrait-drift { 0%, 100% { transform: translateY(0) rotate(2deg); } 50% { transform: translateY(-9px) rotate(0deg); } }
 @keyframes spark-turn { to { transform: rotate(180deg); } }
 @media (prefers-reduced-motion: no-preference) {
+  .scroll-zoom-media { scale: var(--scroll-zoom, 1); translate: 0 var(--scroll-pan, 0%); transform-origin: center 12%; }
+  .portrait-hello { translate: 0 var(--caption-parallax, 0px); }
   .hero-content > * { animation: hero-arrive .7s both; }
   .hero-content h1 { animation-delay: .08s; }
   .hero-description { animation-delay: .16s; }

@@ -190,6 +190,30 @@ const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
 const motionToggle = document.querySelector('.motion-toggle');
 const revealAnimations = new Set();
 let motionPaused = false;
+let parallaxFrame = 0;
+const parallaxItems = [...document.querySelectorAll('.hero-portrait, .project-visual')].flatMap(container => {
+  const image = container.querySelector('img');
+  if (!image) return [];
+  image.classList.add('scroll-zoom-media');
+  return [{ container, image, hero: container.classList.contains('hero-portrait') }];
+});
+function updateParallax() {
+  parallaxFrame = 0;
+  if (motionPreference.matches || motionPaused) return;
+  // Read layout together, then write only transforms; scrolling stays native.
+  const positions = parallaxItems.map(item => ({ ...item, rect: item.container.getBoundingClientRect() }));
+  positions.forEach(({ container, image, hero, rect }) => {
+    if (rect.bottom < 0 || rect.top > innerHeight || !rect.height) return;
+    const start = Math.max(0, rect.top + scrollY - innerHeight * .7);
+    const progress = Math.min(1, Math.max(0, (scrollY - start) / (rect.height + innerHeight * .25)));
+    image.style.setProperty('--scroll-zoom', 1 + progress * (hero ? .14 : .06));
+    image.style.setProperty('--scroll-pan', `${progress * .6}%`);
+    if (hero) container.style.setProperty('--caption-parallax', `${-progress * 18}px`);
+  });
+}
+function scheduleParallax() {
+  if (!parallaxFrame && !motionPreference.matches && !motionPaused) parallaxFrame = requestAnimationFrame(updateParallax);
+}
 function syncMotion() {
   const disabled = motionPreference.matches || motionPaused;
   document.body.classList.toggle('motion-enabled', !motionPreference.matches);
@@ -198,7 +222,23 @@ function syncMotion() {
   motionToggle.setAttribute('aria-pressed', String(motionPaused));
   motionToggle.textContent = motionPaused ? 'Resume animations' : 'Pause animations';
   if (disabled) revealAnimations.forEach(animation => animation.cancel());
+  if (disabled) {
+    cancelAnimationFrame(parallaxFrame);
+    parallaxFrame = 0;
+  }
+  if (motionPreference.matches) parallaxItems.forEach(({ container, image }) => {
+    image.style.removeProperty('--scroll-zoom');
+    image.style.removeProperty('--scroll-pan');
+    container.style.removeProperty('--caption-parallax');
+  });
+  if (!disabled) scheduleParallax();
 }
+window.addEventListener('scroll', scheduleParallax, { passive: true });
+window.addEventListener('resize', scheduleParallax);
+window.addEventListener('pageshow', scheduleParallax);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) scheduleParallax(); });
+// Filtering changes the positions of project images without a scroll event.
+filters.forEach(button => button.addEventListener('click', scheduleParallax));
 motionToggle.addEventListener('click', () => { motionPaused = !motionPaused; syncMotion(); });
 motionPreference.addEventListener('change', syncMotion);
 syncMotion();
