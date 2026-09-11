@@ -184,3 +184,37 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 window.addEventListener('resize', updateNavigation);
 updateNavigation();
+
+// Motion is optional; all content remains visible without JavaScript.
+const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+const motionToggle = document.querySelector('.motion-toggle');
+const revealAnimations = new Set();
+let motionPaused = false;
+function syncMotion() {
+  const disabled = motionPreference.matches || motionPaused;
+  document.body.classList.toggle('motion-enabled', !motionPreference.matches);
+  document.body.classList.toggle('motion-paused', disabled);
+  motionToggle.hidden = motionPreference.matches;
+  motionToggle.setAttribute('aria-pressed', String(motionPaused));
+  motionToggle.textContent = motionPaused ? 'Resume animations' : 'Pause animations';
+  if (disabled) revealAnimations.forEach(animation => animation.cancel());
+}
+motionToggle.addEventListener('click', () => { motionPaused = !motionPaused; syncMotion(); });
+motionPreference.addEventListener('change', syncMotion);
+syncMotion();
+if ('IntersectionObserver' in window) {
+  const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      revealObserver.unobserve(entry.target);
+      if (motionPreference.matches || motionPaused) return;
+      const animation = entry.target.animate([
+        { opacity: .35, transform: 'translateY(22px)' },
+        { opacity: 1, transform: 'translateY(0)' }
+      ], { duration: 650, easing: 'cubic-bezier(.2,.7,.2,1)' });
+      revealAnimations.add(animation);
+      animation.finished.catch(() => {}).finally(() => revealAnimations.delete(animation));
+    });
+  }, { threshold: .12 });
+  document.querySelectorAll('.section-heading, .growth-spotlight, .about-grid, .experience-grid').forEach(element => revealObserver.observe(element));
+}

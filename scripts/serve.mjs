@@ -4,7 +4,7 @@ import { resolve, extname, sep } from 'node:path';
 const root = resolve(process.argv[2] === 'dist' ? 'dist' : '.');
 const portIndex = process.argv.indexOf('--port');
 const port = Number(process.env.PORT || (portIndex > -1 ? process.argv[portIndex + 1] : 5173));
-const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.jpg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml', '.pdf': 'application/pdf', '.ttf': 'font/ttf', '.json': 'application/json' };
+const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.png': 'image/png', '.svg': 'image/svg+xml', '.pdf': 'application/pdf', '.ttf': 'font/ttf', '.json': 'application/json' };
 http.createServer(async (req, res) => {
   try {
     const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);

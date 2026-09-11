@@ -41,6 +41,10 @@ The case study section also contains all four mini case studies from PDF page 12
 
 Published on Cloudflare Pages: https://prashant-portfolio-9rn.pages.dev
 
+The homepage includes an illustrated portrait based on Prashant’s supplied photo, staggered introduction animations, a floating portrait, a rotating accent, and one-time section reveals. A pause/resume control and the operating system’s reduced-motion setting control motion. The optimized portrait is `assets/prashant-portrait-illustrated.webp` (88 KB); generation details are recorded in `docs/portrait-generation.md`.
+
+Cloudflare Pages uses direct uploads. GitHub pushes alone do not deploy the site. To publish an update, run `npm run build`, then `npx wrangler@3 pages deploy dist --project-name prashant-portfolio --branch main` while authenticated to the owning Cloudflare account.
+
 
 ## Interface behavior
 
